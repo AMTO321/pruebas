@@ -1,0 +1,37 @@
+from GestionarJSON import GestionarJSON # type: ignore
+from MiClase import MiClase
+
+if __name__ == "__main__":
+    # 1. Inicializar el gestor
+    gestor = GestionarJSON()
+    
+    print("--- FASE 1: INGRESAR Y GUARDAR DATOS ---")
+    
+    # 2. Obtener datos del teclado
+    datos_para_guardar = gestor.ingresar_datos_teclado()
+    
+    # 3. Guardar los datos en el archivo JSON
+    gestor.guardar_en_json(datos_para_guardar)
+
+    
+    
+    print("\n--- FASE 2: LEER DATOS Y CREAR OBJETO ---")
+    
+    # 4. Cargar los datos desde el archivo JSON
+    datos_cargados = gestor.cargar_desde_json()
+    
+    if datos_cargados:
+        # 5. Crear una instancia de MiClase a partir de los datos leídos del JSON
+        objeto_desde_json = MiClase(
+            texto=datos_cargados['atributo_string'],
+            entero=datos_cargados['atributo_int'],
+            decimal=datos_cargados['atributo_float'],
+            letra=datos_cargados['atributo_char']
+        )
+        
+        # 6. Mostrar el objeto creado
+        print("\n ¡Objeto MiClase creado a partir de los datos del JSON!")
+        print(f"Contenido del objeto: {objeto_desde_json}")
+        print(f"Ejemplo de acceso: El entero es {objeto_desde_json.atributo_int}")
+    else:
+        print("\nNo se pudo crear el objeto MiClase porque la carga del JSON falló.")

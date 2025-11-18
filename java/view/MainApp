@@ -1,0 +1,88 @@
+// Ubicación: com.examen.view
+package com.examen.view;
+
+import com.examen.controller.StudentController;
+import com.examen.model.Student;
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class MainApp {
+    
+    private static StudentController controller = new StudentController();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        // Ejecución de la lógica de negocio y entrada de datos
+        inputDataFromKeyboard();
+        
+        // ----------------------------------------------------
+        // PARTE 1: CREACIÓN Y GUARDADO (Output JSON)
+        // ----------------------------------------------------
+        
+        System.out.println("\n============================================");
+        System.out.println("   1. GUARDADO Y CREACIÓN DE ARCHIVO JSON   ");
+        System.out.println("============================================");
+        
+        // 1. Convertir la lista a JSON String
+        String finalJson = controller.listToJson();
+        System.out.println("\n--- Contenido generado de students.json ---");
+        System.out.println(finalJson);
+        
+        // ----------------------------------------------------
+        // PARTE 2: LECTURA DESDE JSON (Input JSON)
+        // ----------------------------------------------------
+        
+        System.out.println("\n============================================");
+        System.out.println("     2. LECTURA Y VERIFICACIÓN DEL JSON     ");
+        System.out.println("============================================");
+        
+        // 2. Leer/reconstruir la lista a partir del JSON String
+        ArrayList<Student> readList = controller.jsonToList(finalJson);
+        
+        System.out.println("\n--- Objetos reconstruidos desde JSON ---");
+        for (Student s : readList) {
+            System.out.println("LEÍDO: " + s.toString());
+        }
+        
+        scanner.close();
+    }
+    
+    /**
+     * Maneja el ingreso de datos interactivo por teclado.
+     */
+    private static void inputDataFromKeyboard() {
+        String continueInput;
+        
+        System.out.println("--- Inicio de Ingreso de Datos (Teclado) ---");
+        
+        do {
+            System.out.print("\nIngrese Nombre: ");
+            String name = scanner.nextLine();
+            
+            System.out.print("Ingrese Carrera: ");
+            String major = scanner.nextLine();
+            
+            double gpa = 0.0;
+            boolean validGpa = false;
+            while (!validGpa) {
+                try {
+                    System.out.print("Ingrese GPA (0.0-4.0): ");
+                    gpa = Double.parseDouble(scanner.nextLine());
+                    if (gpa >= 0.0 && gpa <= 4.0) {
+                        validGpa = true;
+                    } else {
+                        System.out.println("[ERROR] El GPA debe estar entre 0.0 y 4.0.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("[ERROR] Ingrese un valor numérico válido para el GPA.");
+                }
+            }
+            
+            controller.addStudent(name, major, gpa);
+
+            System.out.print("\n¿Desea ingresar otro estudiante? (s/n): ");
+            continueInput = scanner.nextLine();
+            
+        } while (continueInput.equalsIgnoreCase("s"));
+    }
+}

@@ -1,0 +1,57 @@
+import json
+import os
+
+class GestionarJSON:
+    """
+    Clase para manejar la entrada de datos por teclado y guardarlos en un archivo JSON.
+    """
+    
+    def __init__(self, nombre_archivo="datos_clase.json"):
+        # Define el nombre del archivo JSON donde se guardarán los datos.
+        self.nombre_archivo = nombre_archivo
+
+    def ingresar_datos_teclado(self):
+        """Pide al usuario los datos requeridos."""
+        print("\n--- INGRESO DE DATOS POR TECLADO ---")
+        
+        texto = input("Ingrese un string (texto): ")
+        
+        # Usamos un bucle para asegurar que el usuario ingrese un número entero válido
+        while True:
+            try:
+                entero = int(input("Ingrese un int (número entero): "))
+                break
+            except ValueError:
+                print("Error: Por favor, ingrese un número entero válido.")
+        
+        # Usamos un bucle para asegurar que el usuario ingrese un número flotante válido
+        while True:
+            try:
+                flotante = float(input("Ingrese un float (número decimal): "))
+                break
+            except ValueError:
+                print("Error: Por favor, ingrese un número decimal válido.")
+
+        # Tomamos solo el primer carácter de lo que el usuario ingrese
+        caracter = input("Ingrese un caracter (solo se usará el primero): ")[0] 
+        
+        # Devolvemos un diccionario con los datos ingresados
+        return {
+            "atributo_string": texto,
+            "atributo_int": entero,
+            "atributo_float": flotante,
+            "atributo_char": caracter
+        }
+
+    def guardar_en_json(self, datos):
+        """Serializa el diccionario de datos y lo guarda en el archivo JSON."""
+        
+        # Usamos 'w' para escribir (crear o sobrescribir) el archivo
+        try:
+            with open(self.nombre_archivo, 'w', encoding='utf-8') as archivo:
+                # json.dump escribe el diccionario 'datos' en el archivo en formato JSON
+                # 'indent=4' hace que el JSON sea legible
+                json.dump(datos, archivo, indent=4)
+            print(f"\n Datos guardados exitosamente en: {os.path.abspath(self.nombre_archivo)}")
+        except Exception as e:
+            print(f"\n Error al guardar el archivo: {e}")

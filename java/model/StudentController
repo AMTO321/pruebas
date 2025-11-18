@@ -1,0 +1,51 @@
+// Ubicación: com.examen.controller
+package com.examen.controller;
+
+import com.examen.model.Student;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.util.ArrayList;
+
+public class StudentController {
+
+    // Lista de estudiantes (simula el ArrayList)
+    private ArrayList<Student> studentList = new ArrayList<>();
+    
+    // Contador para IDs
+    private int nextId = 101; 
+
+    /**
+     * Agrega un nuevo estudiante a la lista (Rubro 4: Data input).
+     */
+    public void addStudent(String name, String major, double gpa) {
+        Student newStudent = new Student(nextId++, name, major, gpa);
+        studentList.add(newStudent);
+        System.out.println("-> Estudiante ID " + newStudent.getId() + " agregado.");
+    }
+    
+    public ArrayList<Student> getStudentList() {
+        return studentList;
+    }
+
+    /**
+     * Convierte la lista actual de estudiantes a una cadena JSON (Rubro 4: JSON file).
+     * @return Cadena JSON formateada.
+     */
+    public String listToJson() {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(studentList);
+    }
+
+    /**
+     * Lee una cadena JSON y la convierte de nuevo a una lista de objetos (Rubro 5: Read from JSON file).
+     * @param jsonString Cadena JSON de entrada.
+     * @return ArrayList<Student> reconstruido.
+     */
+    public ArrayList<Student> jsonToList(String jsonString) {
+        Gson gson = new Gson();
+        // Usamos un tipo genérico para decirle a Gson que espere un ArrayList de Students
+        java.lang.reflect.Type studentListType = 
+            new com.google.gson.reflect.TypeToken<ArrayList<Student>>() {}.getType();
+        return gson.fromJson(jsonString, studentListType);
+    }
+}
